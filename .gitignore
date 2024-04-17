@@ -1,0 +1,7 @@
+.env
+env
+migrations/versions/*
+__pycache__
+monnify
+quidax
+ign
