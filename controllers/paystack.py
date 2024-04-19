@@ -26,7 +26,7 @@ def initialiaze_payment(
     email: str,
     full_name: str,
     phone_number: str,
-    department: str,
+    department_code: str,
     level: str,
     matric_number: str,
     session: str,
@@ -35,7 +35,7 @@ def initialiaze_payment(
     try:
         dept = (
             db.query(Departments)
-            .filter(Departments.code == department.strip().lower())
+            .filter(Departments.code == department_code.strip().lower())
             .first()
         )
         if not dept:
@@ -47,11 +47,12 @@ def initialiaze_payment(
                 email=email.strip().lower(),
                 phone_number=phone_number.strip().lower(),
                 full_name=full_name.strip().lower(),
-                department=department.strip().lower(),
+                department=department_code.strip().lower(),
                 level=level.strip().lower(),
                 matric_number=matric_number.strip().lower(),
             )
-            db.commit(user)
+            db.add(user)
+            db.commit()
             db.refresh(user)
 
         exist = (
@@ -98,7 +99,7 @@ def initialiaze_payment(
             db.add(
                 PaystackWebhooks(
                     status="pending",
-                    payer_id=user.email,
+                    payer_email=user.email,
                     reference=reference,
                     body=json.dumps(data),
                 )
@@ -216,3 +217,5 @@ def check_payment_status(matric_number: str, session: str, db: Session):
         print(e.args)
         return r.error_occured
 
+def get_all_departmenst(db:Session):
+    return db.query(Departments).all()

@@ -29,7 +29,7 @@ class Users(AbstractModel):
 
     email = Column(String(255), nullable=True)
     phone_number = Column(String(255), default="")
-    departmnt = Column(String(255), default="")
+    department = Column(String(255), default="")
     last_login = Column(DateTime, default=datetime.now(TZ))
     is_active = Column(Boolean, default=False)
     matric_number = Column(String(255), default="")
