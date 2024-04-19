@@ -68,7 +68,8 @@ def initialiaze_payment(
             return r.payment_processing
 
         url = baseurl + "/transaction/initialize"
-        amount = int(dept.dues_amount + dept.payment_fees)
+        fee = ((dept.payment_fees / 100) * dept.dues_amount)
+        amount = int(dept.dues_amount + fee)
         payload = {
             "email": user.email,
             "amount": str(amount * 100),
