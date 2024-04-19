@@ -25,3 +25,8 @@ payment_session_not_found = {
     "code":404,
     "message":"No records for selected session"
 }
+
+invalid_session = {
+    "code":419,
+    "message":"session must be in the format '2023/2024' "
+}

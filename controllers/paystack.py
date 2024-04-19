@@ -15,11 +15,18 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 import json
-
+import re
 baseurl = get_env("PAYSTACK_URL")
 secret_key = get_env("PAYSTACK_SECRET_KEY")
 
 headers = {"Authorization": f"Bearer {secret_key}", "Content-Type": "application/json"}
+
+
+
+def validate_session(session):
+    pattern = r"^\d{4}/\d{4}$"
+    return re.match(pattern, session)
+
 
 
 def initialiaze_payment(
@@ -33,6 +40,9 @@ def initialiaze_payment(
     db: Session,
 ):
     try:
+        if not validate_session(session):
+            return r.invalid_session
+        
         dept = (
             db.query(Departments)
             .filter(Departments.code == department_code.strip().lower())
@@ -176,6 +186,8 @@ def handle_webhooks_transactions(data: dict, db: Session):
 
 def check_payment_status(matric_number: str, session: str, db: Session):
     try:
+        if not validate_session(session):
+            return r.invalid_session
         matric_number = matric_number.strip().lower()
         session = session.strip().lower()
         user = (
