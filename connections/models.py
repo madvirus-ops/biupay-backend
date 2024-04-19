@@ -66,3 +66,11 @@ class PaystackWebhooks(AbstractModel):
     body = Column(Text, nullable=True)
     status = Column(String(255), default="pending") 
 
+
+class OutgoingPayment(AbstractModel):
+    __tablename__ = "outgoing_payment"
+    payer_email = Column(String(255), default="")
+    reference = Column(String(255), default="active")
+    body = Column(Text, nullable=True)
+    status = Column(String(255), default="pending") 
+
