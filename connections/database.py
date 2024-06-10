@@ -30,10 +30,10 @@ engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     pool_size=50,
     max_overflow=20,
-    # pool_timeout=120,
-    # pool_recycle=900,
-    # pool_pre_ping=True,
-    # connect_args={"options": "-c idle_in_transaction_session_timeout=20000"},
+    pool_timeout=120,
+    pool_recycle=900,
+    pool_pre_ping=True,
+    connect_args={"options": "-c idle_in_transaction_session_timeout=20000"},
 )
 Base = declarative_base()
 
