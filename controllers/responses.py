@@ -3,7 +3,7 @@ sys.path.append("./")
 
 error_occured = {
     "code":500,
-    "message":"error occured"
+    "message":"Error occured"
 }
 
 dept_not_found = {
@@ -28,5 +28,5 @@ payment_session_not_found = {
 
 invalid_session = {
     "code":419,
-    "message":"session must be in the format '2023/2024' "
+    "message":"Session must be in the format '2023/2024' "
 }
