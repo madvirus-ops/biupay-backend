@@ -60,7 +60,7 @@ async def check_status(
     return result
 
 
-@router.post("/completed")
+@router.post("/completed",include_in_schema=False)
 async def handle_webhook_(request: Request, db: Session = Depends(get_db)):
     """
     `this is not your business, avoid it`

@@ -176,7 +176,7 @@ def handle_webhooks_transactions(data: dict, db: Session):
             db.commit()
             check.status = "processed"
             check.body = json.dumps(data)
-            # TODO send email to user or stuffs like that
+            # TODO send email to user discord or stuffs like that
             transs = transfer_to_admin(
                 user.email,
                 reference,
@@ -187,6 +187,7 @@ def handle_webhooks_transactions(data: dict, db: Session):
                 db,
             )
             print(transs)
+
         else:
             print("Unhandled event data", data["event"])
             print("Event data", data)
