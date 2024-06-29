@@ -14,7 +14,7 @@ from connections.models import (
 )
 from datetime import datetime
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
+from sqlalchemy import or_,func
 import json
 import re
 
@@ -47,7 +47,7 @@ def initialiaze_payment(
 
         dept = (
             db.query(Departments)
-            .filter(Departments.code == department_code.strip().lower())
+            .filter(func.lower(Departments.code) == department_code.strip().lower())
             .first()
         )
         if not dept:
