@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware import Middleware
-from routers import payments
+from routers import payments,admin
 
 # print(datetime.now())
 
@@ -28,3 +28,4 @@ app = FastAPI(
 )
 
 app.include_router(payments.router)
+app.include_router(admin.router)

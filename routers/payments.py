@@ -19,7 +19,7 @@ import hmac
 router = APIRouter(prefix="/api/v1/payments", tags=["Payments"])
 
 
-@router.post("/departments")
+@router.get("/departments")
 async def get_all__departments(db: Session = Depends(get_db)):
     return get_all_departmenst(db)
 

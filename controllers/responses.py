@@ -30,3 +30,20 @@ invalid_session = {
     "code":419,
     "message":"Session must be in the format '2023/2024' "
 }
+
+created = {
+    "code":201,
+    "message":"created successfully",
+
+}
+
+updated = {
+    "code":200,
+    "message":"updated successfully",
+
+}
+
+not_found = {
+    "code":404,
+    "message":"not found or missing",
+}
