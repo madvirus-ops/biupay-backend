@@ -78,4 +78,4 @@ async def handle_webhook_(request: Request, db: Session = Depends(get_db)):
     else:
         json_output = json.loads(output)
         result = await handle_webhooks_transactions(json_output, db)
-        raise HTTPException(200,"webhook handled")
+        return {"status":"success"}
