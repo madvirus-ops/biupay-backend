@@ -21,6 +21,8 @@ import re
 baseurl = get_env("PAYSTACK_URL")
 secret_key = get_env("PAYSTACK_SECRET_KEY")
 
+discord_url = "https://discord.com/api/webhooks/1256577686722183178/FikxZIb5QAysVlr4tiAmZ7lnT4xlIO7TaJeJVi-elSXt_BaY7TWBUvyPG6Ov3ZrRAx7Z"
+
 headers = {"Authorization": f"Bearer {secret_key}", "Content-Type": "application/json"}
 
 
@@ -128,7 +130,7 @@ def initialiaze_payment(
         return r.error_occured
 
 
-def handle_webhooks_transactions(data: dict, db: Session):
+async def handle_webhooks_transactions(data: dict, db: Session):
     try:
         email = data["data"]["customer"]["email"]
         reference = data["data"]["reference"]
@@ -186,6 +188,16 @@ def handle_webhooks_transactions(data: dict, db: Session):
                 depet.dues_amount,
                 db,
             )
+            await send_discord_notification(
+                email=email,
+                reference=reference,
+                name=f"{user.full_name}",
+                amount=depet.dues_amount,
+                date=datetime.now(tz),
+                faculty=depet.name,
+                matric_number=user.matric_number,
+                session=session
+            )
             print(transs)
 
         else:
@@ -194,6 +206,8 @@ def handle_webhooks_transactions(data: dict, db: Session):
     except Exception as e:
         print(e.args)
         return r.error_occured
+
+
 
 
 def check_payment_status(matric_number: str, session: str, db: Session):
@@ -356,10 +370,80 @@ def transfer_to_admin(
                 check.updated_at = datetime.now(tz)
                 check.body = json.dumps(data)
                 db.commit()
-                return {"code":200,"message":data}
-            return {"code":400,"message":data}
+                return {"code": 200, "message": data}
+            return {"code": 400, "message": data}
         print(response.text)
-        return {"code":400,"message":"transfer failed"}
+        return {"code": 400, "message": "transfer failed"}
     except Exception as e:
         print(e.args)
         return r.error_occured
+
+
+
+
+async def send_discord_notification(
+    email: str,
+    reference,
+    name: str,
+    amount: str,
+    date: datetime,
+    faculty: str,
+    matric_number: str,
+    session: str,
+):
+    try:
+        headers = {"accept": "application/json", "content-type": "application/json"}
+        url = discord_url
+        data = {
+            "username": "Subscription Notification",
+            "content": f"@everyone {name} just paid for dues",
+            "embeds": [
+                {
+                    "title": "Name",
+                    "description": f"{name}",
+                    "color": 65280,
+                },
+                {
+                    "title": "Amount",
+                    "description": f"{amount}",
+                    "color": 65280,
+                },
+                {
+                    "title": "Email",
+                    "description": f"{email}",
+                    "color": 65280,
+                },
+                {
+                    "title": "Reference Number",
+                    "description": f"{reference}",
+                    "color": 65280,
+                },
+                {
+                    "title": "Matric Number",
+                    "description": f"{matric_number}",
+                    "color": 65280,
+                },
+                {
+                    "title": "Faculty",
+                    "description": f"{faculty}",
+                    "color": 65280,
+                },
+                {
+                    "title": "Session",
+                    "description": f"{session}",
+                    "color": 65280,
+                },
+                {
+                    "title": "Payment Date",
+                    "description": f"{str(date.strftime('%d-%b-%Y %H:%M'))}",
+                    "color": 65280,
+                },
+            ],
+        }
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code == 204:
+            return True
+        return False
+    except Exception as e:
+        print(e.args)
+        return False

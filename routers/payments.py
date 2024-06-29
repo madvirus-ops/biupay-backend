@@ -9,7 +9,7 @@ from controllers.paystack import (
     get_all_departmenst,
     secret_key
 )
-from fastapi import APIRouter, Response, Request, Depends
+from fastapi import APIRouter, Response, Request, Depends,HTTPException
 from sqlalchemy.orm import Session
 from connections.schemas import InitPayment
 import json
@@ -74,7 +74,8 @@ async def handle_webhook_(request: Request, db: Session = Depends(get_db)):
 
     if hashed_key != requested_header:
         print("Not Valid?")
-        return None
+        raise HTTPException(401,"Invalid webhook")
     else:
         json_output = json.loads(output)
-        result = handle_webhooks_transactions(json_output, db)
+        result = await handle_webhooks_transactions(json_output, db)
+        raise HTTPException(200,"webhook handled")
