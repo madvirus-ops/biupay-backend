@@ -1,5 +1,6 @@
 import sys
 sys.path.append("./")
+from fastapi import status
 
 error_occured = {
     "code":500,
@@ -12,7 +13,7 @@ dept_not_found = {
 }
 
 payment_processing = {
-    "code":412,
+    "code":status.HTTP_409_CONFLICT,
     "message":"Your have an Existing payment, Kindly hold on for confirmation."
 }
 
@@ -27,7 +28,7 @@ payment_session_not_found = {
 }
 
 invalid_session = {
-    "code":419,
+    "code":status.HTTP_422_UNPROCESSABLE_ENTITY,
     "message":"Session must be in the format '2023/2024' "
 }
 
